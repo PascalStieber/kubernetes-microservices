@@ -20,8 +20,8 @@ mehrere versionen einer applikation:
 - order:v1; order:v2 (bugfix: 10% des traffics sollen testhalber auf den neuen 'bugfreien' order-process geroutet werden
 	- order:v1 order objekt wird nicht gespeichert.
 	- order:v2 order objekt wird gespeichert.
-- https://istio.io/docs/tasks/traffic-management/fault-injection/ Injecting an HTTP abort faul
-- order ruft billing auf, billing antwortet aber nur mit latenzen (evlt. abort fault 20%)
+- https://istio.io/docs/tasks/traffic-management/fault-injection/ Injecting an HTTP abort fault
+	- order ruft billing auf, billing antwortet aber nur mit latenzen (evlt. abort fault 20%)
 
 
 ## istio service mesh
