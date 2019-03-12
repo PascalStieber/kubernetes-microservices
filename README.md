@@ -13,19 +13,19 @@ shipment / versandt
 
 ## deployment szenarios
 mehrere versionen einer applikation:
-	- web-frontend:v1; web-frontend:v2 (verspricht 10% mehr umsatz durch bessere usability)
-		- web-frontend:v1 nur html; ohne css; ganz rudimentär
-		- web-frontend:v2 responsive weboberfläche mit stylesheets (bootstrap)
-	- billing:v1; billing:black-friday (15% auf den kompletten einkauf am black-friday)
-	- order:v1; order:v2 (bugfix: 10% des traffics sollen testhalber auf den neuen 'bugfreien' order-process geroutet werden)
-		- order:v1 order objekt wird nicht gespeichert.
-		- order:v2 order objekt wird gespeichert.
-	- https://istio.io/docs/tasks/traffic-management/fault-injection/ Injecting an HTTP abort fault
-		- order ruft billing auf, billing antwortet aber nur mit latenzen (evlt. abort fault 20%)
+- web-frontend:v1; web-frontend:v2 (verspricht 10% mehr umsatz durch bessere usability)
+	- web-frontend:v1 nur html; ohne css; ganz rudimentär
+	- web-frontend:v2 responsive weboberfläche mit stylesheets (bootstrap)
+- billing:v1; billing:black-friday (15% auf den kompletten einkauf am black-friday
+- order:v1; order:v2 (bugfix: 10% des traffics sollen testhalber auf den neuen 'bugfreien' order-process geroutet werden
+	- order:v1 order objekt wird nicht gespeichert.
+	- order:v2 order objekt wird gespeichert.
+- https://istio.io/docs/tasks/traffic-management/fault-injection/ Injecting an HTTP abort faul
+- order ruft billing auf, billing antwortet aber nur mit latenzen (evlt. abort fault 20%)
 
 
 ## istio service mesh
 
-### visual graph 
+### visualize service graph with kiali 
 
 ## testing via watch curl
