@@ -1,0 +1,4 @@
+com/datawarehouse/Application.class
+com/datawarehouse/rest/DummyData.class
+com/datawarehouse/entity/Item.class
+com/datawarehouse/repository/ItemRepository.class

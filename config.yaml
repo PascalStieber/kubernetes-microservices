@@ -1,0 +1,57 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Configuration
+metadata:
+  name: demo-node-app
+  namespace: default
+  labels:
+    app: demo-node-app
+spec:
+  revisionTemplate:
+    metadata:
+      name: demo-node-app-v2
+      labels:
+        knative.dev/type: container
+    spec:    
+      container:
+        image: docker.io/pascalstieber/kubernetes_microservices:v2
+        imagePullPolicy: Always
+        env:
+          - name: T_VERSION
+            value: "green"
+status:
+  latestCreatedRevisionName: demo-node-app-v2
+  latestReadyRevisionName: demo-node-app-v1
+  observedGeneration: 2
+
+---
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: app-from-source
+  namespace: default
+spec:
+  runLatest:
+    configuration:
+      build:
+        apiVersion: build.knative.dev/v1alpha1
+        kind: Build
+        spec:
+          serviceAccountName: build-bot
+          source:
+            git:
+              url: https://github.com/mchmarny/simple-app.git
+              revision: master
+          template:
+            name: kaniko
+            arguments:
+              - name: IMAGE
+                value: docker.io/{DOCKER_USERNAME}/app-from-source:latest
+          timeout: 10m
+      revisionTemplate:
+        spec:
+          container:
+            image: docker.io/{DOCKER_USERNAME}/app-from-source:latest
+            imagePullPolicy: Always
+            env:
+              - name: SIMPLE_MSG
+                value: "Hello from the sample app!"

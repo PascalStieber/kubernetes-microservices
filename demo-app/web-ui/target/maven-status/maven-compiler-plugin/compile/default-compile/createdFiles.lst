@@ -1,0 +1,5 @@
+com/webui/Application.class
+com/webui/entity/Item.class
+com/webui/rest/View.class
+com/webui/client/RestClient.class
+com/webui/client/RestClient$1.class
