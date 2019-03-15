@@ -23,14 +23,13 @@ import com.webui.entity.Item;
 @Service
 public class RestClient {
 
-	public List<Item> receiveAllAvailableItems() {
+	public List<Item> receiveAllAvailableItems(String urlRequestString) {
 		RestTemplate restTemplate = new RestTemplate();
 		
 		   ParameterizedTypeReference<PagedResources<Item>> responseTypeRef = new ParameterizedTypeReference<PagedResources<Item>>() {
 		    };
 
-		    String API_URL = "http://datawarehouse:8181/item";
-		    ResponseEntity<PagedResources<Item>> responseEntity = restTemplate().exchange(API_URL, HttpMethod.GET,
+		    ResponseEntity<PagedResources<Item>> responseEntity = restTemplate().exchange(urlRequestString, HttpMethod.GET,
 		            (HttpEntity<Item>) null, responseTypeRef);
 
 		    PagedResources<Item> resources = responseEntity.getBody();

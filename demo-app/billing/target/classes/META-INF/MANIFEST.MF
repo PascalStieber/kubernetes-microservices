@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: pascalstieber
+Build-Jdk: 9.0.1
+Implementation-Title: billing
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.kubernetes-microservices
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/demo-app/billing
+Created-By: Maven Integration for Eclipse
+

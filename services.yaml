@@ -1,0 +1,58 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: datawarehouse
+  namespace: default
+  labels:
+    app: datawarehouse
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        metadata:
+          name: datawarehouse-v1
+        spec:
+          container:
+            image: docker.io/pascalstieber/kubernetes_microservices:v3
+            imagePullPolicy: Always #IfNotPresent
+            # ports:
+            # - containerPort: 8181
+
+---
+
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: webui
+  namespace: default
+  labels:
+    app: webui
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        metadata:
+          name: webui-v1
+        spec:
+          container:
+            image: docker.io/pascalstieber/kubernetes_microservices:v4
+            imagePullPolicy: Always
+            # ports:
+            #   - containerPort: 8080
+---
+apiVersion: serving.knative.dev/v1alpha1
+kind: Route
+metadata:
+  name: datawarehouse # Updating our existing route
+  namespace: default
+spec:
+  traffic:
+    - revisionName: datawarehouse-v1
+      percent: 50
+      #name: v1 # Adding a new named route for v1
+    - revisionName: datawarehouse-v2
+      percent: 50
+      # Named route for v2 has been removed, since we don't need it anymore
+
+
+#http://192.168.64.21:31380/webui?serviceUrl=http://datawarehouse.default.example.com/item

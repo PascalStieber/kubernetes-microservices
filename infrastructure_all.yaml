@@ -32,21 +32,36 @@ spec:
     route:
       - destination:
           host: istio-ingressgateway.istio-system.svc.cluster.local
-          #subset: v2
-        weight: 100
-      #- destination:
-      #    host: istio-ingressgateway.istio-system.svc.cluster.local
-      #  weight: 50
+        weight: 100    
+  - match:
+    - uri:
+        prefix: "/dummydata"
+    rewrite:
+      authority: datawarehouse.default.example.com
+    route:
+      - destination:
+          host: istio-ingressgateway.istio-system.svc.cluster.local
+        weight: 100   
+  - match:
+    - uri:
+        prefix: "/webui"
+    rewrite:
+      uri: "/items"
+      authority: webui.default.example.com
+    route:
+      - destination:
+          host: istio-ingressgateway.istio-system.svc.cluster.local
+        weight: 100   
   - match:
     - uri:
         prefix: "/"
     rewrite:
       authority: demo-node-app.default.example.com
-      #demo-node-app.default.svc.cluster.local
     route:
       - destination:
           host: istio-ingressgateway.istio-system.svc.cluster.local
         weight: 100
+
 ---
 
 apiVersion: serving.knative.dev/v1alpha1
@@ -81,8 +96,8 @@ spec:
         spec:
           container:
             image: docker.io/pascalstieber/kubernetes_microservices:v1
-          ports:
-          - containerPort: 8080
+          # ports:
+          # - containerPort: 8080
 
 
 ---
@@ -122,10 +137,10 @@ metadata:
     app: kiali
 type: Opaque
 data:
-  username: YWRtaW4=
-  passphrase: MWYyZDFlMmU2N2Rm
+  username: cGFzY2Fsc3RpZWJlcg==
+  passphrase: YQ==
 
-#echo -n 'admin' | base64
-#YWRtaW4=
-#echo -n '1f2d1e2e67df' | base64
-#MWYyZDFlMmU2N2Rm    
+#echo -n 'pascalstieber' | base64
+#cGFzY2Fsc3RpZWJlcg==
+#echo -n 'a' | base64
+#YQ==    

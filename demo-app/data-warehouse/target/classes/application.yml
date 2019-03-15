@@ -2,4 +2,4 @@ spring:
   application:
     name: data-warehouse
 server:
-  port: 8181
+  port: 8080

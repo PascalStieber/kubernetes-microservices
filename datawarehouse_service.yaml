@@ -1,0 +1,19 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: datawarehouse
+  namespace: default
+  labels:
+    app: datawarehouse
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        metadata:
+          name: datawarehouse-v1
+        spec:
+          container:
+            image: docker.io/pascalstieber/kubernetes_microservices:v3
+            imagePullPolicy: Always #IfNotPresent
+            # ports:
+            #   - containerPort: 8080

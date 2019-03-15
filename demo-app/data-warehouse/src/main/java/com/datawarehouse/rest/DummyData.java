@@ -22,6 +22,7 @@ public class DummyData {
 		itemRepository.save(item1);
 		itemRepository.save(item2);
 		itemRepository.save(item3);		
+		
 	}
 
 }
