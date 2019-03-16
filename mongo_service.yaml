@@ -20,8 +20,6 @@ spec:
         volumeMounts:
         - name: mongodb-task-volume
           mountPath: /data/db
-        - name: mongodb-task-volume
-          mountPath: /etc/mongo/mongod.conf
         ports:
         - containerPort: 27017
       volumes:
