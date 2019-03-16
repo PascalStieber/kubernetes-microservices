@@ -1,23 +1,3 @@
-# apiVersion: v1
-# kind: Pod
-# metadata:
-#   name: mongodb 
-# spec:
-#   volumes:
-#   - name: mongodb-data
-#     hostPath:
-#       path: /tmp/mongodb
-#   containers:
-#   - image: mongo
-#     name: mongodb
-#     volumeMounts:
-#     - name: mongodb-data
-#       mountPath: /data/db
-#     ports:
-#     - containerPort: 27017
-#       protocol: TCP
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,7 +5,7 @@ metadata:
   labels:
     app: mongodb
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: mongodb
@@ -37,5 +17,50 @@ spec:
       containers:
       - name: mongodb
         image: mongo
+        volumeMounts:
+        - name: mongodb-task-volume
+          mountPath: /data/db
+        - name: mongodb-task-volume
+          mountPath: /etc/mongo/mongod.conf
         ports:
         - containerPort: 27017
+      volumes:
+        - name: mongodb-task-volume
+          persistentVolumeClaim:
+            claimName: mongodb-data-claim
+      # volumes:
+      # - name: mongodb-data
+      #   emptyDir: {}
+        # hostPath: 
+        #   path: ./mongodb-data/data/db
+        #   type: DirectoryOrCreate
+
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mongodb-data-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mongodb_data
+    type: DirectoryOrCreate
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mongodb-data-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
