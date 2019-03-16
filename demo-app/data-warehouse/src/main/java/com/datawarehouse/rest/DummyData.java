@@ -13,7 +13,6 @@ public class DummyData {
 	@Autowired
 	private ItemRepository itemRepository;
 	
-	
 	@GetMapping("/dummydata")
 	public void createDummyData() {
 		Item item1 = new Item("Lenovo Notebook","Super tolles Notebook. Mega Power.", 1200.00, 123456789, true);

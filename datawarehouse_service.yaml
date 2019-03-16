@@ -16,4 +16,5 @@ spec:
             image: docker.io/pascalstieber/kubernetes_microservices:v3
             imagePullPolicy: Always #IfNotPresent
             # ports:
-            #   - containerPort: 8080
+            # - containerPort: 8080
+            
