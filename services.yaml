@@ -9,8 +9,8 @@ spec:
   runLatest:
     configuration:
       revisionTemplate:
-        metadata:
-          name: datawarehouse-v1
+        # metadata:
+        #   name: datawarehouse-v1
         spec:
           container:
             image: docker.io/pascalstieber/kubernetes_microservices:v3
@@ -31,8 +31,8 @@ spec:
   runLatest:
     configuration:
       revisionTemplate:
-        metadata:
-          name: webui-v1
+        # metadata:        
+        #   name: webui-v1
         spec:
           container:
             image: docker.io/pascalstieber/kubernetes_microservices:v4
@@ -55,4 +55,4 @@ spec:
       # Named route for v2 has been removed, since we don't need it anymore
 
 
-#http://192.168.64.21:31380/webui?serviceUrl=http://datawarehouse.default.example.com/item
+#http://192.168.64.23:30193/webui?serviceUrl=http://datawarehouse.default.example.com/item
