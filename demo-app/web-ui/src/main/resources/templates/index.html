@@ -2,33 +2,67 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Getting Started: Serving Web Content</title>
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
 	<div>
-		<span><strong>Be-Amazing - the undisputed online store
-				;-)</strong></span>
+
+		<img th:src="@{/images/bee_image.jpg}"
+			style="height: 100px; width: 200px; border: none;"
+			class="img-thumbnail float-left" />
+
+
+		<h1>Bee-Amazing</h1>
+		<h2>- next gen. webshop -</h2>
 	</div>
-	<table id="usersTable">
-		<tr>
-			<th>item number</th>
-			<th>name</th>
-			<th>description</th>
-			<th>price</th>
-			<th>in stock</th>
-		</tr>
-		<!-- 		https://getbootstrap.com/docs/4.0/content/tables/ -->
-		<tr th:each="item : ${items}">
-			<td class="item number" th:text="${item.number}">n/a</td>
-			<td class="item name" th:text="${item.name}">n/a</td>
-			<td class="description" th:text="${item.description}">n/a</td>
-			<td class="price" th:text="${item.price}">n/a</td>
-			<td class="available"
-				th:text="${item.instock} ? 'available' : 'not available'">n/a</td>
-		</tr>
-	</table>
-
-
+	<form>
+	<div style="margin-top: 100px;" class="container">
+		<div class="row">
+			<div class="col-6">
+				<h3>Item List</h3>
+				<table class="table" id="usersTable">
+					<tr>
+						<th>item number</th>
+						<th>name</th>
+						<th>description</th>
+						<th>price</th>
+						<th>in stock</th>
+						<th>action</th>
+					</tr>
+					<!-- 		https://getbootstrap.com/docs/4.0/content/tables/ -->
+					<tr th:each="item : ${allitems}">
+						<td class="item number" th:text="${item.number}">n/a</td>
+						<td class="item name" th:text="${item.name}">n/a</td>
+						<td class="description" th:text="${item.description}">n/a</td>
+						<td class="price" th:text="${item.price}">n/a</td>
+						<td class="available" th:text="${item.instock} ? 'available' : 'not available'">n/a	</td>
+						<td> <button type="submit" name="saveItem" class="btn btn-sm btn-primary"
+								th:value="${item.number}" >add to basket +</button>
+								
+						
+					</tr>
+				</table>
+			</div>
+			<div class="col-3"></div>
+			<div class="col-3">
+				<h3>Shopping Cart</h3>
+				<table class="table" id="usersTable">
+					<tr>
+						<th>item</th>
+						<th>price</th>
+					</tr>
+					<tr th:each="item : ${shoppingitems}">
+						<td class="item" th:text="${item.name}">n/a</td>
+						<td class="price" th:text="${item.price}">n/a</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	</form>
 </body>
 </html>

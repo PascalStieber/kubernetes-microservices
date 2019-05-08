@@ -23,37 +23,47 @@ import com.webui.entity.Item;
 @Service
 public class RestClient {
 
-	public List<Item> receiveAllAvailableItems(String urlRequestString) {
+	public void saveItemToBasket(Integer itemNumber) {
 		RestTemplate restTemplate = new RestTemplate();
-		
-		   ParameterizedTypeReference<PagedResources<Item>> responseTypeRef = new ParameterizedTypeReference<PagedResources<Item>>() {
-		    };
+		restTemplate.postForObject("shoppingcart.example.com?saveItem=" + itemNumber, null, null);
+	}
 
-		    ResponseEntity<PagedResources<Item>> responseEntity = restTemplate().exchange(urlRequestString, HttpMethod.GET,
-		            (HttpEntity<Item>) null, responseTypeRef);
+	public void deleteItemFromBasket(Integer itemNumber) {
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.postForObject("shoppingcart.example.com?deleteItem=" + itemNumber, null, null);
+	}
 
-		    PagedResources<Item> resources = responseEntity.getBody();
-		    Collection<Item> items = resources.getContent();
-		    List<Item> itemsList = new ArrayList<Item>(items);
+	public List<Item> receiveItems(String urlRequestString) {
+		RestTemplate restTemplate = new RestTemplate();
+
+		ParameterizedTypeReference<PagedResources<Item>> responseTypeRef = new ParameterizedTypeReference<PagedResources<Item>>() {
+		};
+
+		ResponseEntity<PagedResources<Item>> responseEntity = restTemplate().exchange(urlRequestString, HttpMethod.GET,
+				(HttpEntity<Item>) null, responseTypeRef);
+
+		PagedResources<Item> resources = responseEntity.getBody();
+		Collection<Item> items = resources.getContent();
+		List<Item> itemsList = new ArrayList<Item>(items);
 
 		return itemsList;
 	}
-	
+
 	private RestTemplate restTemplate() {
 
-	    ObjectMapper mapper = new ObjectMapper();
-	    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	    mapper.registerModule(new Jackson2HalModule());
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		mapper.registerModule(new Jackson2HalModule());
 
-	    MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-	    converter.setSupportedMediaTypes(MediaType.parseMediaTypes("application/hal+json"));
-	    converter.setObjectMapper(mapper);
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		converter.setSupportedMediaTypes(MediaType.parseMediaTypes("application/hal+json"));
+		converter.setObjectMapper(mapper);
 
-	    List<HttpMessageConverter<?>> converterList = new ArrayList<HttpMessageConverter<?>>();
-	    converterList.add(converter);
-	    RestTemplate restTemplate = new RestTemplate(converterList);
+		List<HttpMessageConverter<?>> converterList = new ArrayList<HttpMessageConverter<?>>();
+		converterList.add(converter);
+		RestTemplate restTemplate = new RestTemplate(converterList);
 
-	    return restTemplate;
+		return restTemplate;
 	}
 
 }

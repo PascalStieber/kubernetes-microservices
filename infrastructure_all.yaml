@@ -64,40 +64,40 @@ spec:
 
 ---
 
-apiVersion: serving.knative.dev/v1alpha1
-kind: Route
-metadata:
-  name: demo-node-app # Updating our existing route
-  namespace: default
-spec:
-  traffic:
-    - revisionName: demo-node-app-v1
-      percent: 50
-      #name: v1 # Adding a new named route for v1
-    - revisionName: demo-node-app-v2
-      percent: 50
-      # Named route for v2 has been removed, since we don't need it anymore
+# apiVersion: serving.knative.dev/v1alpha1
+# kind: Route
+# metadata:
+#   name: demo-node-app # Updating our existing route
+#   namespace: default
+# spec:
+#   traffic:
+#     - revisionName: demo-node-app-v1
+#       percent: 50
+#       #name: v1 # Adding a new named route for v1
+#     - revisionName: demo-node-app-v2
+#       percent: 50
+#       # Named route for v2 has been removed, since we don't need it anymore
 
 ---
 
-apiVersion: serving.knative.dev/v1alpha1
-kind: Service
-metadata:
-  name: demo-node-app
-  namespace: default
-  labels:
-    app: demo-node-app
-spec:
-  runLatest:
-    configuration:
-      revisionTemplate:
-        # metadata:
-        #   name: demo-node-app-v1
-        spec:
-          container:
-            image: docker.io/pascalstieber/kubernetes_microservices:v1
-          # ports:
-          # - containerPort: 8080
+# apiVersion: serving.knative.dev/v1alpha1
+# kind: Service
+# metadata:
+#   name: demo-node-app
+#   namespace: default
+#   labels:
+#     app: demo-node-app
+# spec:
+#   runLatest:
+#     configuration:
+#       revisionTemplate:
+#         # metadata:
+#         #   name: demo-node-app-v1
+#         spec:
+#           container:
+#             image: docker.io/pascalstieber/kubernetes_microservices:v1
+#           # ports:
+#           # - containerPort: 8080
 
 
 ---
@@ -128,17 +128,17 @@ spec:
 #   observedGeneration: 2
 ---
 
-apiVersion: v1
-kind: Secret
-metadata:
-  name: kiali
-  namespace: istio-system
-  labels:
-    app: kiali
-type: Opaque
-data:
-  username: cGFzY2Fsc3RpZWJlcg==
-  passphrase: YQ==
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: kiali
+#   namespace: istio-system
+#   labels:
+#     app: kiali
+# type: Opaque
+# data:
+#   username: cGFzY2Fsc3RpZWJlcg==
+#   passphrase: YQ==
 
 #echo -n 'pascalstieber' | base64
 #cGFzY2Fsc3RpZWJlcg==

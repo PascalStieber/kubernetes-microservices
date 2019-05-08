@@ -1,7 +1,7 @@
 
 spring:
   application:
-    name: data-warehouse
+    name: datawarehouse
   data:
     mongodb:
       host: mongodb

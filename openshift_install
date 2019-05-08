@@ -1,0 +1,119 @@
+git clone https://github.com/openshift-cloud-functions/knative-operators
+cd knative-operators
+./etc/scripts/install-on-minishift.sh
+
+---minshift config
+# make sure you have  a profile is set correctly, e.g. knative
+minishift profile set knative
+
+# minimum memory required for the minishift VM
+minishift config set memory 8GB
+
+# the minimum required vCpus for the minishift vm
+minishift config set cpus 4
+
+# extra disk size for the vm, default is 20GB
+minishift config set disk-size 50GB
+
+# caching the images that will be downloaded during app deployments
+minishift config set image-caching true
+
+# Add new user called admin with password admin having role cluster-admin
+minishift addons enable admin-user
+
+# Allow the containers to be run with uid 0
+minishift addons enable anyuid
+
+# Enable Admission Controller Webhook
+minishift addon enable admissions-webhook
+
+# start minishift
+minishift start
+---
+# configures the host talk to DOCKER daemon of minishift
+minishift docker-env
+# Adds the right version of openshift cli binary to $PATH
+minishift oc-env
+---
+oc project myproject
+oc adm policy add-scc-to-user privileged -z default
+oc label namespace myproject istio-injection=enabled
+---fix
+oc adm policy add-scc-to-user anyuid -z cluster-local-gateway-service-account -n istio-system
+---istio
+curl -s https://raw.githubusercontent.com/knative/docs/master/docs/install/scripts/istio-openshift-policies.sh | bash
+
+oc apply --filename https://github.com/knative/serving/releases/download/v0.5.0/istio-crds.yaml && \
+oc apply --filename https://github.com/knative/serving/releases/download/v0.5.0/istio.yaml
+
+---knative
+curl -s https://raw.githubusercontent.com/knative/docs/master/docs/install/scripts/knative-openshift-policies.sh | bash
+
+oc delete svc knative-ingressgateway -n istio-system
+oc delete deploy knative-ingressgateway -n istio-system
+oc delete statefulset/controller-manager -n knative-sources
+
+oc apply --filename https://github.com/knative/serving/releases/download/v0.5.0/serving.yaml
+oc apply --filename https://github.com/knative/build/releases/download/v0.5.0/build.yaml
+oc apply --filename https://raw.githubusercontent.com/knative/serving/v0.5.0/third_party/config/build/clusterrole.yaml
+
+---routing
+sudo route -n add -net $(minishift openshift config view | grep ingressIPNetworkCIDR | awk '{print $NF}') $(minishift ip)
+
+---example app
+
+    oc project myproject
+echo '
+apiVersion: serving.knative.dev/v1alpha1 # Current version of Knative
+kind: Service
+metadata:
+  name: helloworld-go # The name of the app
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        spec:
+          container:
+            image: gcr.io/knative-samples/helloworld-go # The URL to the image of the app
+            env:
+            - name: TARGET # The environment variable printed out by the sample app
+              value: "Go Sample v1"
+' | oc create -f -
+# Wait for the hello pod to enter its `Running` state
+oc get pod --watch
+
+# In Knative 0.2.x and prior versions, the `knative-ingressgateway` service was used instead of `istio-ingressgateway`.
+INGRESSGATEWAY=knative-ingressgateway
+
+# The use of `knative-ingressgateway` is deprecated in Knative v0.3.x.
+# Use `istio-ingressgateway` instead, since `knative-ingressgateway`
+# will be removed in Knative v0.4.
+if oc get configmap config-istio -n knative-serving &> /dev/null; then
+    INGRESSGATEWAY=istio-ingressgateway
+fi
+
+# Call the service
+export IP_ADDRESS=$(oc get svc $INGRESSGATEWAY -n istio-system -o 'jsonpath={.status.loadBalancer.ingress[0].ip}')
+# This should output 'Hello World: Go Sample v1!'
+curl -H "Host: helloworld-go.myproject.example.com" http://$IP_ADDRESS
+
+
+---uninstall
+minishift delete --force --clear-cache
+rm -rf ~/.minishift
+rm -rf ~/.kube
+
+---start with nameserver
+minishift start --network-nameserver 8.8.8.8
+eval $(minishift oc-env)
+
+docker run -it --rm --privileged --pid=host justincormack/nsenter1 /bin/sh -c 'mkdir -p /var/lib/kubelet/device-plugins'
+
+--- curl example app
+curl -H "Host: helloworld-go.myproject.example.com" http://192.168.64.46:30015
+
+
+
+
+--- edit config map
+kubectl edit cm config-domain --namespace knative-serving

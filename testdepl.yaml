@@ -1,0 +1,198 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '1'
+  creationTimestamp: '2019-05-07T04:58:04Z'
+  generation: 2
+  labels:
+    app: helloworld-dooo-nr4cg
+    serving.knative.dev/configuration: helloworld-dooo
+    serving.knative.dev/configurationGeneration: '1'
+    serving.knative.dev/configurationMetadataGeneration: '1'
+    serving.knative.dev/revision: helloworld-dooo-nr4cg
+    serving.knative.dev/revisionUID: b1753c6a-7084-11e9-a479-12d43fe57cf9
+    serving.knative.dev/service: helloworld-dooo
+    sidecar.istio.io/inject: "true"
+    istio-injection: enabled
+  name: helloworld-dooo-nr4cg-deployment
+  namespace: myproject
+  ownerReferences:
+    - apiVersion: serving.knative.dev/v1alpha1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Revision
+      name: helloworld-dooo-nr4cg
+      uid: b1753c6a-7084-11e9-a479-12d43fe57cf9
+  resourceVersion: '237811'
+  selfLink: >-
+    /apis/apps/v1/namespaces/myproject/deployments/helloworld-dooo-nr4cg-deployment
+  uid: b2a36e09-7084-11e9-a479-12d43fe57cf9
+spec:
+  progressDeadlineSeconds: 120
+  replicas: 0
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      serving.knative.dev/revisionUID: b1753c6a-7084-11e9-a479-12d43fe57cf9
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: 'true'
+        traffic.sidecar.istio.io/includeOutboundIPRanges: '*'
+      creationTimestamp: null
+      labels:
+        app: helloworld-dooo-nr4cg
+        serving.knative.dev/configuration: helloworld-dooo
+        serving.knative.dev/configurationGeneration: '1'
+        serving.knative.dev/configurationMetadataGeneration: '1'
+        serving.knative.dev/revision: helloworld-dooo-nr4cg
+        serving.knative.dev/revisionUID: b1753c6a-7084-11e9-a479-12d43fe57cf9
+        serving.knative.dev/service: helloworld-dooo
+    spec:
+      containers:
+        - env:
+            - name: TARGET
+              value: Go Sample v1
+            - name: PORT
+              value: '8080'
+            - name: K_REVISION
+              value: helloworld-dooo-nr4cg
+            - name: K_CONFIGURATION
+              value: helloworld-dooo
+            - name: K_SERVICE
+              value: helloworld-dooo
+          image: >-
+            gcr.io/knative-samples/helloworld-go@sha256:5ea96ba4b872685ff4ddb5cd8d1a97ec18c18fae79ee8df0d29f446c5efe5f50
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /quitquitquit
+                port: 8022
+                scheme: HTTP
+          name: user-container
+          ports:
+            - containerPort: 8080
+              name: user-port
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 400m
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: FallbackToLogsOnError
+          volumeMounts:
+            - mountPath: /var/log
+              name: varlog
+        - env:
+            - name: SERVING_NAMESPACE
+              value: myproject
+            - name: SERVING_CONFIGURATION
+              value: helloworld-dooo
+            - name: SERVING_REVISION
+              value: helloworld-dooo-nr4cg
+            - name: SERVING_AUTOSCALER
+              value: autoscaler
+            - name: SERVING_AUTOSCALER_PORT
+              value: '8080'
+            - name: CONTAINER_CONCURRENCY
+              value: '0'
+            - name: REVISION_TIMEOUT_SECONDS
+              value: '300'
+            - name: SERVING_POD
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: SERVING_LOGGING_CONFIG
+              value: |-
+                {
+                  "level": "info",
+                  "development": false,
+                  "outputPaths": ["stdout"],
+                  "errorOutputPaths": ["stderr"],
+                  "encoding": "json",
+                  "encoderConfig": {
+                    "timeKey": "ts",
+                    "levelKey": "level",
+                    "nameKey": "logger",
+                    "callerKey": "caller",
+                    "messageKey": "msg",
+                    "stacktraceKey": "stacktrace",
+                    "lineEnding": "",
+                    "levelEncoder": "",
+                    "timeEncoder": "iso8601",
+                    "durationEncoder": "",
+                    "callerEncoder": ""
+                  }
+                }
+            - name: SERVING_LOGGING_LEVEL
+              value: info
+            - name: USER_PORT
+              value: '8080'
+            - name: SYSTEM_NAMESPACE
+              value: knative-serving
+          image: >-
+            gcr.io/knative-releases/github.com/knative/serving/cmd/queue@sha256:e19ca17d2b729904d2662a30b6c5c27cf4b62fd64baef2da4125525a4f9346e5
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /quitquitquit
+                port: 8022
+                scheme: HTTP
+          name: queue-proxy
+          ports:
+            - containerPort: 8012
+              name: queue-port
+              protocol: TCP
+            - containerPort: 8022
+              name: queueadm-port
+              protocol: TCP
+            - containerPort: 9090
+              name: queue-metrics
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8022
+              scheme: HTTP
+            periodSeconds: 1
+            successThreshold: 1
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 25m
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 300
+      volumes:
+        - emptyDir: {}
+          name: varlog
+status:
+  conditions:
+    - lastTransitionTime: '2019-05-07T05:00:23Z'
+      lastUpdateTime: '2019-05-07T05:00:23Z'
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: 'True'
+      type: Available
+    - lastTransitionTime: '2019-05-07T05:00:23Z'
+      lastUpdateTime: '2019-05-07T05:00:23Z'
+      message: >-
+        ReplicaSet "helloworld-dooo-nr4cg-deployment-7b66d67c9c" has
+        successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+  observedGeneration: 2
