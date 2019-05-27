@@ -17,15 +17,15 @@ spec:
       containers:
       - name: mongodb
         image: mongo
-        volumeMounts:
-        - name: mongodb-task-volume
-          mountPath: /data/db
+      #   volumeMounts:
+      #   - name: mongodb-task-volume
+      #     mountPath: /data/db
         ports:
         - containerPort: 27017
-      volumes:
-        - name: mongodb-task-volume
-          persistentVolumeClaim:
-            claimName: mongodb-data-claim
+      # volumes:
+      #   - name: mongodb-task-volume
+      #     persistentVolumeClaim:
+      #       claimName: mongodb-data-claim
       # volumes:
       # - name: mongodb-data
       #   emptyDir: {}
@@ -34,31 +34,31 @@ spec:
         #   type: DirectoryOrCreate
 
 ---
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: mongodb-data-volume
-  labels:
-    type: local
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /mongodb_data
-    type: DirectoryOrCreate
+# kind: PersistentVolume
+# apiVersion: v1
+# metadata:
+#   name: mongodb-data-volume
+#   labels:
+#     type: local
+# spec:
+#   storageClassName: manual
+#   capacity:
+#     storage: 10Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: /mongodb_data
+#     type: DirectoryOrCreate
 
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: mongodb-data-claim
-spec:
-  storageClassName: manual
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 3Gi
+# ---
+# kind: PersistentVolumeClaim
+# apiVersion: v1
+# metadata:
+#   name: mongodb-data-claim
+# spec:
+#   storageClassName: manual
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 3Gi

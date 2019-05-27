@@ -117,3 +117,9 @@ curl -H "Host: helloworld-go.myproject.example.com" http://192.168.64.46:30015
 
 --- edit config map
 kubectl edit cm config-domain --namespace knative-serving
+
+--- mongo host path issues 
+https://docs.okd.io/latest/admin_guide/manage_scc.html#modify-cluster-default-behavior
+
+--- policy
+oc adm policy add-scc-to-user anyuid -z default

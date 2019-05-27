@@ -1,0 +1,57 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: entry-route
+  namespace: default
+spec:
+  gateways:
+  - knative-ingress-gateway.knative-serving.svc.cluster.local
+  hosts:
+  - "*"
+  http:
+  - match:
+    - uri:
+        prefix: "/webui"
+    rewrite:
+      uri: "/"
+      #uri: "?serviceUrl=http://datawarehouse.myproject.example.com/item"
+      authority: webui.myproject.example.com
+    route:
+      - destination:
+          host: istio-ingressgateway.istio-system.svc.cluster.local
+        weight: 100
+  - match:
+    - uri:
+        prefix: "/dummydata"
+    rewrite:
+      uri: "/dummydata"
+      #uri: "?serviceUrl=http://datawarehouse.myproject.example.com/item"
+      authority: datawarehouse.myproject.example.com
+    route:
+      - destination:
+          host: istio-ingressgateway.istio-system.svc.cluster.local
+        weight: 100      
+  - match:
+    - headers:
+        x-service-version:
+          exact: "v2"
+    - uri:
+        prefix: "/demo"
+    rewrite:
+      uri: "/demov2"
+      authority: demo-node-app.default.example.com
+    route:
+      - destination:
+          host: istio-ingressgateway.istio-system.svc.cluster.local
+          subset: v2
+        weight: 100
+  - match:
+    - uri:
+        prefix: "/test"
+    rewrite:
+      uri: "/"
+      authority: helloworld-go.myproject.example.com
+    route:
+      - destination:
+          host: istio-ingressgateway.istio-system.svc.cluster.local
+        weight: 100

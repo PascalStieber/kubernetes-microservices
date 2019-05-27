@@ -1,0 +1,37 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: datawarehouse
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        spec:
+          container:
+            image: docker.io/pascalstieber/kubernetes_microservices:datawarehouse-v1
+            imagePullPolicy: Always
+            # ports:
+            # - containerPort: 8181
+
+---
+
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: webui
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        spec:
+          container:
+            image: docker.io/pascalstieber/kubernetes_microservices:webui-v1
+            imagePullPolicy: Always
+
+---
+
+
+#http://192.168.64.26:32402/webui?serviceUrl=http://datawarehouse.default.svc.cluster.local/item
+
+#neue url http://192.168.64.46:30015/webui/items?serviceUrl=http://datawarehouse.myproject.svc.cluster.local/item
+#versuche auch mal http://192.168.64.46:30015/webui/items?serviceUrl=http://datawarehouse/item

@@ -8,10 +8,10 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>order</module>
-		<module>web-ui</module>
+		<module>webui</module>
 		<module>billing</module>
-		<module>shopping-cart</module>
-		<module>data-warehouse</module>
+		<module>shoppingcart</module>
+		<module>datawarehouse</module>
 	</modules>
 
 	<properties>
