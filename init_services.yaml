@@ -30,8 +30,21 @@ spec:
 
 ---
 
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: shoppingcart
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        spec:
+          container:
+            image: docker.io/pascalstieber/kubernetes_microservices:shoppingcart-v1
+            imagePullPolicy: Always
 
-#http://192.168.64.26:32402/webui?serviceUrl=http://datawarehouse.default.svc.cluster.local/item
 
-#neue url http://192.168.64.46:30015/webui/items?serviceUrl=http://datawarehouse.myproject.svc.cluster.local/item
-#versuche auch mal http://192.168.64.46:30015/webui/items?serviceUrl=http://datawarehouse/item
+#http://192.168.64.48:31925/webui?serviceUrl=http://datawarehouse.default.svc.cluster.local/item
+
+#neue url http://192.168.64.48:31925/webui/items?serviceUrl=http://datawarehouse.myproject.svc.cluster.local/item
+#versuche auch mal http://192.168.64.48:31925/webui/items?serviceUrl=http://datawarehouse/item

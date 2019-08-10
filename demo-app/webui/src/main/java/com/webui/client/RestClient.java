@@ -23,23 +23,26 @@ import com.webui.entity.Item;
 @Service
 public class RestClient {
 
-	public void saveItemToBasket(Integer itemNumber) {
+	public void saveItemToBasket(Integer itemNumber, String serviceUrl) {
 		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.postForObject("shoppingcart.example.com?saveItem=" + itemNumber, null, null);
+		System.out.println("requested url " + serviceUrl +"?saveItem=" + itemNumber);
+		Item responseItem = restTemplate.postForObject(serviceUrl + "?saveItem=" + itemNumber, null, Item.class);
+		System.out.println("received responseItem: " + responseItem);
 	}
 
-	public void deleteItemFromBasket(Integer itemNumber) {
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.postForObject("shoppingcart.example.com?deleteItem=" + itemNumber, null, null);
+	public void deleteItemFromBasket(Integer itemNumber, String serviceUrl) {
+		RestTemplate restTemplate = new RestTemplate();		
+		Item responseItem = restTemplate.postForObject(serviceUrl + "?deleteItem=" + itemNumber, itemNumber, Item.class);
+		System.out.println("received responseItem: " + responseItem);
 	}
 
-	public List<Item> receiveItems(String urlRequestString) {
-		RestTemplate restTemplate = new RestTemplate();
-
+	public List<Item> receiveItems(String serviceUrl) {
+//		RestTemplate restTemplate = new RestTemplate();
+		
 		ParameterizedTypeReference<PagedResources<Item>> responseTypeRef = new ParameterizedTypeReference<PagedResources<Item>>() {
 		};
 
-		ResponseEntity<PagedResources<Item>> responseEntity = restTemplate().exchange(urlRequestString, HttpMethod.GET,
+		ResponseEntity<PagedResources<Item>> responseEntity = restTemplate().exchange(serviceUrl + "/item", HttpMethod.GET,
 				(HttpEntity<Item>) null, responseTypeRef);
 
 		PagedResources<Item> resources = responseEntity.getBody();

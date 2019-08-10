@@ -4,7 +4,7 @@ spring:
     name: shoppingcart
   data:
     mongodb:
-      host: mongodb
+      host: shoppingcartdb
       port: 27017
 server:
   port: 8080

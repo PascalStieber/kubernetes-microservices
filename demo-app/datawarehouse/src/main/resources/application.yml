@@ -4,7 +4,7 @@ spring:
     name: datawarehouse
   data:
     mongodb:
-      host: mongodb
+      host: datawarehousedb
       port: 27017
 server:
   port: 8080

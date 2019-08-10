@@ -1,5 +1,4 @@
 com/shoppingcart/repository/ItemRepository.class
 com/shoppingcart/entity/Item.class
-com/shoppingcart/rest/DummyData.class
 com/shoppingcart/Application.class
 com/shoppingcart/rest/ShoppingCartService.class
